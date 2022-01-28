@@ -1,0 +1,47 @@
+﻿@{
+    ViewBag.Title = "Apresentação";
+}
+
+@*@section scripts{
+    <script type="text/javascript" src="@(Url.Content("~/Scripts/ipc.snowcomplete2.js"))"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#field").snowcomplete2({
+                remote: "/Controller/Action/?query=%QUERY",
+                placeholder: "Placeholder",
+                text: function (obj) {
+                    return "(" + obj.Sigla +")" + obj.Label;
+                },
+                item: function (obj) {
+                    return [
+                        "<span>" + obj.Label + "</span>",
+                        "<span> Na Listagem </span>",
+                        "<span >" + obj.Sigla + "</span>"
+                    ];
+                }
+            });
+        });
+    </script>
+}*@
+
+<div class="jumbotron">
+    <h1>ASP.NET</h1>
+    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
+    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+</div>
+@*
+<form>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label for="field">Label</label>
+                        <input type="text" class="form-control" id="field" name="field" placeholder="Será substituido" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+*@
