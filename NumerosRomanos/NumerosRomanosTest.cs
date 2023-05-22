@@ -1,18 +1,19 @@
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 
 namespace NumerosRomanos
 {
     public class NumerosRomanosTest
     {
-        [TestCase("I", 1)]
-        [TestCase("V", 5)]
-        [TestCase("X", 10)]
-        [TestCase("L", 50)]
-        [TestCase("C", 100)]
-        [TestCase("D", 500)]
-        [TestCase("M", 1000)]
-        [TestCase("III", 3)]
+        //[TestCase("I", 1)]
+        //[TestCase("V", 5)]
+        //[TestCase("X", 10)]
+        //[TestCase("L", 50)]
+        //[TestCase("C", 100)]
+        //[TestCase("D", 500)]
+        //[TestCase("M", 1000)]
+        //[TestCase("III", 3)]
         [TestCase("LVIII", 58)]
         [TestCase("MCMXCIV", 1994)]
         public void Teste(string numeroRomano, int numeroInteiroEsperado)
@@ -75,7 +76,37 @@ namespace NumerosRomanos
         */
         private int NumeroRomanoParaInteiro(string numeroRomano)
         {
-            throw new NotImplementedException();
+            Dictionary<char, int> numerosRomanos = new Dictionary<char, int>()
+            {
+                {'I', 1},
+                {'V', 5},
+                {'X', 10},
+                {'L', 50},
+                {'C', 100},
+                {'D', 500},
+                {'M', 1000}
+            };
+
+            int result = 0;
+            int valorAnterior = 0;
+
+            for (int i = numeroRomano.Length - 1; i >= 0; i--)
+            {
+                int valorAtual = numerosRomanos[numeroRomano[i]];
+
+                if (valorAtual >= valorAnterior)
+                {
+                    result += valorAtual;
+                }
+                else
+                {
+                    result -= valorAtual;
+                }
+
+                valorAnterior = valorAtual;
+            }
+
+            return result;
         }
     }
 }

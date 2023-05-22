@@ -27,14 +27,14 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Início", "Index", "BuscaCep")</li>
-                    <li>@Html.ActionLink("Sobre", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contato", "Contact", "Home")</li>
+                    <li>@Html.ActionLink("Buscar Endereco", "BuscarEndereco", "BuscadorCEP")</li>
+                    <li>@Html.ActionLink("Buscar Cep", "BuscarCEP", "BuscadorCEP")</li>
                 </ul>
             </div>
         </div>
     </div>
-    <div class="container body-conten text-center">
+    <div class="container body-content text-center">
+        <hr />
         @RenderBody()
         <hr />
 

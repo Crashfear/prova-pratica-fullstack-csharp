@@ -7,14 +7,15 @@ namespace FizzBuzz
 {
     public class FizzBuzzUnitTest
     {
+        //Mudei o valor da primeira chave para 3, com 1 não iria funcionar de acordo com o que foi solicitado no exercicio.
         private Dictionary<int, string[]> entradaSaida = new Dictionary<int, string[]>
         {
-            { 1, new[] { "1", "2", "Fizz" } },
+            { 3, new[] { "1", "2", "Fizz" } },
             { 5, new[] { "1","2","Fizz","4","Buzz" } },
             { 15, new[] {"1","2","Fizz","4","Buzz","Fizz","7","8","Fizz","Buzz","11","Fizz","13","14","FizzBuzz" } }
         };
 
-        [TestCase(1)]
+        [TestCase(3)]
         [TestCase(5)]
         [TestCase(15)]
         public void MetodoTeste(int numeroTeste)
@@ -57,7 +58,33 @@ namespace FizzBuzz
          */
         public IEnumerable<string> FizzBuzz(int valor)
         {
-            throw new NotImplementedException();
+            var result = new List<string>(valor);
+
+            for (int i = 1; i <= valor; i++)
+            {
+                var isFizz = i % 3 == 0;
+                var isBuzz = i % 5 == 0;
+
+                if (isFizz && isBuzz)
+                {
+                    result.Add("FizzBuzz");
+                }
+                else if (isFizz)
+                {
+                    result.Add("Fizz");
+                }
+                else if (isBuzz)
+                {
+                    result.Add("Buzz");
+                }
+                else
+                {
+                    result.Add(i.ToString());
+                }
+            }
+           
+            return result;
         }
+
     }
 }

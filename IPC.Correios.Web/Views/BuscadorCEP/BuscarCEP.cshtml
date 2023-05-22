@@ -1,0 +1,178 @@
+﻿
+@model IPC.Correios.Application.ViewModels.BuscaEnderecoViewModel
+
+@{
+    ViewBag.Title = "Busca CEP";
+}
+
+
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+<div class="form-group">
+    @Html.LabelFor(model => model.Estado)
+
+    @(Html.DropDownListFor(model => model.Estado, (IEnumerable<SelectListItem>)ViewBag.Estados, null, htmlAttributes: new { @style = "height: 30px !important;", @class = "form-control" , @id="ddlEstados" }))
+
+    @Html.ValidationMessageFor(model => model.Estado, "", new { @class = "text-danger" })
+</div>
+<div class="form-group">
+    @Html.LabelFor(model => model.Municipio)
+
+    <select id="ddlMunicipio" name="Municipio" class="form-control">
+        <option value="">Selecione um município</option>
+    </select>
+
+    @Html.ValidationMessageFor(model => model.Municipio, "", new { @class = "text-danger" })
+</div>
+<div class="form-group">
+    @Html.LabelFor(model => model.Logradouro)
+
+    <select id="ddlLogradouro" name="Logradouro" class="form-control">
+        <option value="">Selecione um Logradouro</option>
+    </select>
+
+    @Html.ValidationMessageFor(model => model.Municipio, "", new { @class = "text-danger" })
+</div>
+
+<div class="btn-container" role="group">
+    @Html.ActionLink("Voltar", "Index", "Home", "", new { @class = "btn btn-primary" })
+    <button type="button" class="btn btn-primary" id="btnPesquisar" data-toggle="modal" data-target="#modalInfosLogradouro">
+        Pesquisar
+    </button>
+</div>
+
+<div class="modal fade" id="modalInfosLogradouro" tabindex="-1" role="dialog" aria-labelledby="modalInfosLogradouro" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Informações Logradouro</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="">
+                    <span class="">CEP:</span>
+                    <span id="txtCep"></span>
+                </div>
+                <div class="">
+                    <span class="">Código do logradouro:</span>
+                    <span id="txtCodLogradouro"></span>
+                </div>
+                <div class="">
+                    <span class="">Município:</span>
+                    <span id="txtMunicipio"></span>
+                </div>
+                <div class="">
+                    <span class="">Logradouro:</span>
+                    <span id="txtLogradouro"></span>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+
+            $("#btnPesquisar").click(function () {
+                var codLogradouro = $('#ddlLogradouro').val();
+                var logradouro = $('#ddlLogradouro').children("option").filter(":selected").text();
+                $.ajax({
+                    type: "POST",
+                    url: "/BuscadorCEP/GetInfosLogradouro",
+                    data: { codLogradouro: codLogradouro },
+                    success: function (response) {
+
+                        if (response.length == 0) {
+                            alert("Cep não localizado para o Logradouro: " + codLogradouro + " - " + logradouro);
+                            return;
+                        }
+
+                        var cep = response.Cep;
+                        var codLogradouro = response.CodLogradouro;
+                        var municipio = response.Municipio;
+                        var logradouro = response.Logradouro;
+
+                        $('#txtCep').text(cep);
+                        $('#txtCodLogradouro').text(codLogradouro);
+                        $('#txtMunicipio').text(municipio);
+                        $('#txtLogradouro').text(logradouro);
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            });
+
+            $("#ddlEstados").change(function () {
+                ClearDropDown("#ddlMunicipio", "Selecione um município");
+                var uf = $(this).val();
+                $.ajax({
+                    type: "POST",
+                    url: "/BuscadorCEP/GetMunicipios",
+                    data: { uf: uf },
+                    success: function (response) {
+                        PopulateDropDown("#ddlMunicipio", response);
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            });
+
+            $("#ddlMunicipio").change(function () {
+                ClearDropDown("#ddlLogradouro", "Selecione um logradouro");
+                var codMunicipio = $(this).val();
+                var municipio = $(this).children("option").filter(":selected").text();
+                $.ajax({
+                    type: "POST",
+                    url: "/BuscadorCEP/GetLogradouros",
+                    data: { codMunicipio: codMunicipio },
+                    success: function (response) {
+                        PopulateDropDown("#ddlLogradouro", response)
+                        if (response.length == 0) {
+                            alert("Logradouros não localizados para o municipio: " + codMunicipio + " - " + municipio);
+                        }
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            });
+
+            $("#ddlEstados").change();
+
+        });
+
+        function PopulateDropDown(dropDownId, list) {
+            if (list != null && list.length > 0) {
+                $.each(list, function () {
+                    $(dropDownId).append($("<option></option>").val(this['Value']).html(this['Text']));
+                });
+            }
+        }
+
+        function ClearDropDown(dropDownId, defaultOption) {
+            $(dropDownId).empty().append($("<option></option>").val("").html(defaultOption));
+        }
+
+
+    </script>
+}

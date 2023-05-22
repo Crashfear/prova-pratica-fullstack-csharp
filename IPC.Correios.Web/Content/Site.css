@@ -16,3 +16,13 @@
     white-space: normal;
 }
 
+.body-content {
+    text-align: left;
+}
+
+footer {
+    text-align: center;
+}
+.btn-container {
+    text-align: center;
+}

@@ -7,6 +7,10 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using System.IO;
+using IPC.Correios.Application.Mappers;
+using IPC.Correios.Web.DependencyInjection;
+using SimpleInjector;
+using SimpleInjector.Integration.Web.Mvc;
 
 
 namespace IPC.Correios.Middleware.Web
@@ -15,6 +19,7 @@ namespace IPC.Correios.Middleware.Web
     {
         protected void Application_Start()
         {
+            var container = new IPCContainer();
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
@@ -23,8 +28,8 @@ namespace IPC.Correios.Middleware.Web
             var rootPath = HttpContext.Current.Server.MapPath("~/");
             Path.Combine(rootPath,"App_data");
 
-
-
+            DependencyResolver.SetResolver(new SimpleInjectorDependencyResolver(container));
+            AutoMapperConfig.RegisterMappings();
         }
     }
 }

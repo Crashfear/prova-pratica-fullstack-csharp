@@ -46,7 +46,7 @@
 
     $.fn[pluginName] = function (options) {
         var args = arguments;
-
+        console.log(args);
         if (options == undefined || typeof options == 'object') {
 
             return this.each(function () {

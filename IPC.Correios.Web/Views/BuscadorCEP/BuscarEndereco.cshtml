@@ -1,0 +1,23 @@
+﻿
+@model IPC.Correios.Application.ViewModels.BuscaCepViewModel
+
+@{
+    ViewBag.Title = "Busca Endereço";
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(model => model.Cep)
+
+        <input type="text" name="cep"  class="form-control"/>
+        @Html.ValidationMessageFor(model => model.Cep, "", new { @class = "text-danger" })
+    </div>
+    <div class="btn-container" role="group">
+        @Html.ActionLink("Voltar", "Index", "Home", "", new { @class = "btn btn-primary" })
+        <input type="submit" value="Buscar" class="btn btn-primary" />
+    </div>
+
+}
